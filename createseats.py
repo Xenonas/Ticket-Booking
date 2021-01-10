@@ -11,8 +11,8 @@ def create_connection(name):
         )
         return db
     
-    except Error as e:
-        print(e)
+    except:
+        print("error in creating connection")
 
 def create_seats_withoutspecific(locid, numofseats, c):
 
@@ -24,8 +24,8 @@ def create_seats_withoutspecific(locid, numofseats, c):
             cursor = c.cursor() 
             cursor.execute(query)
             c.commit()
-        except Error as e:
-            print(e)
+        except:
+            print("error in creating nonspecific seats")
             return False
 
 def create_seats_specific(locid, numseatrow, numseatcolumn,c):
@@ -39,8 +39,8 @@ def create_seats_specific(locid, numseatrow, numseatcolumn,c):
                 cursor = c.cursor() 
                 cursor.execute(query)
                 c.commit()
-            except Error as e:
-                print(e)
+            except:
+                print("error in creating seats")
                 return False
 
 def initialize_availability(projectionid,c):
@@ -69,19 +69,20 @@ def initialize_availability(projectionid,c):
             cursor.execute(query)
             c.commit()
         
-    except Error as e:
-        print(e)
+    except:
+        print("error in initialization")
         return False
 
 
     
-database = "gamw"
+database = "booking"
 db = create_connection(database)
 
 create_seats_withoutspecific(1,100,db)
 create_seats_withoutspecific(2,200,db)
 create_seats_withoutspecific(3,120,db)
 create_seats_specific(4,4,8,db)
-for i in range(1,13):
+create_seats_withoutspecific(5,100,db)
+for i in range(1,16):
     initialize_availability(i,db)
 

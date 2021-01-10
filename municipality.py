@@ -328,18 +328,17 @@ def check_deletion_ID(db,municipality_ID,matrix_name,ID):
 def delete_query(cursor,matrix_name,db,municipality_ID):
     try:
         ID=input("ID of element to delete: ")
-        if(not ID.isnumeric()):
-            print("\nID must be an integer\nNo query deleted\n")
+        if(not ID.isnumeric() or int(ID)<=0):
+            print("\nID must be a positive integer\nNo query deleted\n")
             return 0;
         check=check_deletion_ID(db,municipality_ID,matrix_name,ID)
         if(check==0):
             print("\nInformation of a different Municipality\nDELETION NOT ALLOWED\n")
             return 0;
-        query="DELETE FROM " + matrix_name + " where " + matrix_name + "_ID=%s"
-        print(query + "\n")
-        cursor.execute(query,(ID,))
+        query="DELETE FROM " + matrix_name + " where " + matrix_name + "_ID=" + ID
+        cursor.execute(query,)
         db.commit()
-        print("\n{} ROWS DELETED\n".format(cursor.rowcount))
+        print("\n{} ROW DELETED\n".format(cursor.rowcount))
     except:
         print("\nError during query deletion")
         return False
@@ -454,12 +453,12 @@ def update_one(matrix_name,cursor,db,attribute,new_entry,query_ID):
         print(query)
         cursor.execute(query,(new_entry,query_ID,))
         db.commit()
-        print("\n{} ROWS UPDATED\n".format(cursor.rowcount))
+        print("\n{} ROW UPDATED\n".format(cursor.rowcount))
     except:
         print("\nWrong Data Type inserted\n")
         return False
 
-def booking(db,cursor): 
+def booking(db,cursor,Μunicipality_ID): 
     print("\nWould you like to see the bookings that have been made in an EXCEL SHEET?\nPress (y) for YES or (n) for NO: ")
     decision=input()
     while (decision!="y" and decision!="n"):
@@ -467,8 +466,8 @@ def booking(db,cursor):
     if(decision=="y"):
         try:
             path=str(pathlib.Path(__file__).parent.absolute())
-            query="SELECT p.Projection_ID,t.Seat_ID,t.Ticket_ID FROM Projection AS p JOIN Ticket AS t ON p.Projection_ID=t.Projection_ID JOIN Event AS e ON p.Event_ID=e.Event_ID ORDER BY p.Projection_ID"
-            cursor.execute(query,)
+            query="SELECT p.Projection_ID,t.Seat_ID,t.Ticket_ID FROM Projection AS p JOIN Ticket AS t ON p.Projection_ID=t.Projection_ID JOIN Event AS e ON p.Event_ID=e.Event_ID WHERE e.Municipality_ID=%s ORDER BY p.Projection_ID"
+            cursor.execute(query,(Μunicipality_ID,))
             items=cursor.fetchall()
             print("\nBooking Tables have been successfully exported!\n")
 
@@ -476,8 +475,8 @@ def booking(db,cursor):
             df = pd.DataFrame(list_of_items, index=None, columns=["Projection_ID","Seat_ID","Ticket_ID"])
             fullpath=path+'\Booked_Tickets.csv'
             df.to_csv (fullpath, index = False, encoding="utf-8")
-            query="SELECT p.Projection_ID,count(Ticket_ID) AS Ticket_Num FROM Projection AS p JOIN Ticket AS t ON p.Projection_ID=t.Projection_ID JOIN Event AS e ON p.Event_ID=e.Event_ID GROUP BY p.Projection_ID ORDER BY p.Projection_ID "
-            cursor.execute(query,)
+            query="SELECT p.Projection_ID,count(Ticket_ID) AS Ticket_Num FROM Projection AS p JOIN Ticket AS t ON p.Projection_ID=t.Projection_ID JOIN Event AS e ON p.Event_ID=e.Event_ID WHERE e.Municipality_ID=%s GROUP BY p.Projection_ID ORDER BY p.Projection_ID "
+            cursor.execute(query,(Μunicipality_ID,))
             items=cursor.fetchall()
             list_of_items = [list(item) for item in items]
             df = pd.DataFrame(list_of_items, index=None, columns=["Projection_ID","Number_of_Tickets"])
@@ -525,7 +524,7 @@ def municipality_dialogue(db,cursor):
                             if(new_entry!=0):    
                                 update_one(choice, cursor,db,attribute,new_entry,query_ID)
         elif(action==5):    
-            booking(db,cursor)
+            booking(db,cursor,municipality_ID)
         else: 
             print("\nNo permission to add to location table\nPlease contact database manager\n")
         indicator=input("\nPress any key to manage the database or 0 to sign out: ")

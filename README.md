@@ -1,4 +1,4 @@
-# Ticket Booking
+# Ticket Booking Database
 This project was made as a semester project for the course "Databases", in the department of Electrical and Computer Engineering in the University of Patras.
 
 The project focuses on SQL queries and architecture, the UI is a plain python command line interface.

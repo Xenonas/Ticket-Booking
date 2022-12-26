@@ -1,9 +1,9 @@
 # Ticket Booking
-This project was made as semester project for "Databases" course in the department of Electrical and Computer Engineering in the University of Patras.
+This project was made as a semester project for the course "Databases", in the department of Electrical and Computer Engineering in the University of Patras.
 
 The project focuses on SQL queries and architecture, the UI is a plain python command line interface.
 
-The subject is  on "Ticket Booking for Culture Events" and the created database supports viewing different events and making reservations, while at the same time, municipalities can add different events that will be available for reservation.
+The subject is  on "Ticket Booking for Cultural Events" and the created database supports viewing different events and making reservations, while at the same time, municipalities can add more events that will be available for seat booking.
 
 Running Instructions
 >To run the main program first insert booking.sql to your database.
@@ -14,3 +14,4 @@ Running Instructions
 >
 >Createseats.py initializes the seats of the locations.
 
+This project was made in cooperation with Evanggelos Skoulas.
